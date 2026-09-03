@@ -8,10 +8,10 @@ export const siteConfig = {
     "Professional pest-control solutions for homes and businesses in Hyderabad. Request a free inspection and get a customized solution for your pest problem.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://safehavenpestcontrol.com",
 
-  // Contact Information (replace with real values)
-  phone: "+91 98765 43210",
-  phoneTel: "+919876543210",
-  whatsapp: "+919876543210",
+  // Contact Information
+  phone: "+91 95050 82120",
+  phoneTel: "+919505082120",
+  whatsapp: "+919505082120",
   email: "info@safehavenpestcontrol.com",
   address: "Business Address, Hyderabad, Telangana, India",
   mapUrl: "https://maps.google.com",
