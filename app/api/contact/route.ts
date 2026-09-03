@@ -15,16 +15,13 @@ export async function POST(req: Request) {
     const body = await req.json();
     const validatedData = contactSchema.parse(body);
 
-    // Save as a lead with source 'contact-form'
     const lead = await db.lead.create({
-      data: {
-        name: validatedData.name,
-        email: validatedData.email,
-        phone: validatedData.phone || '',
-        message: `Subject: ${validatedData.subject}\n\nMessage: ${validatedData.message}`,
-        source: 'contact-page',
-        status: 'NEW',
-      },
+      name: validatedData.name,
+      email: validatedData.email,
+      phone: validatedData.phone || '',
+      message: `Subject: ${validatedData.subject}\n\nMessage: ${validatedData.message}`,
+      source: 'contact-page',
+      status: 'NEW',
     });
 
     return NextResponse.json({ success: true, lead }, { status: 201 });

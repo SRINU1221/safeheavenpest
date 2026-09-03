@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { db } from '@/lib/db';
-// import { sendAdminNotification, sendCustomerConfirmation } from '@/lib/email';
 
 const leadSchema = z.object({
   name: z.string().min(2, 'Name is required'),
@@ -19,28 +18,15 @@ export async function POST(req: Request) {
     const validatedData = leadSchema.parse(body);
 
     const lead = await db.lead.create({
-      data: {
-        name: validatedData.name,
-        phone: validatedData.phone,
-        email: validatedData.email || null,
-        service: validatedData.service || null,
-        location: validatedData.location || null,
-        message: validatedData.message || null,
-        source: validatedData.source,
-        status: 'NEW',
-      },
+      name: validatedData.name,
+      phone: validatedData.phone,
+      email: validatedData.email || null,
+      service: validatedData.service || null,
+      location: validatedData.location || null,
+      message: validatedData.message || null,
+      source: validatedData.source,
+      status: 'NEW',
     });
-
-    // In a real application, you would uncomment these to send emails
-    // try {
-    //   await sendAdminNotification(lead);
-    //   if (lead.email) {
-    //     await sendCustomerConfirmation(lead);
-    //   }
-    // } catch (emailError) {
-    //   console.error('Email sending failed:', emailError);
-    //   // Don't fail the request if just email fails
-    // }
 
     return NextResponse.json({ success: true, lead }, { status: 201 });
   } catch (error) {

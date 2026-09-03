@@ -1,3 +1,5 @@
+import { db } from '@/lib/db';
+
 export default async function AdminDashboard() {
   let totalLeads = 0;
   let newLeads = 0;
@@ -5,7 +7,6 @@ export default async function AdminDashboard() {
   let dbAvailable = true;
 
   try {
-    const { db } = await import('@/lib/db');
     totalLeads = await db.lead.count();
     newLeads = await db.lead.count({ where: { status: 'NEW' } });
     recentLeads = await db.lead.findMany({

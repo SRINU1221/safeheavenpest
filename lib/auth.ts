@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
+import { db } from '@/lib/db';
 
 // Hardcoded fallback admin for production environments without a live database.
 // To change these credentials, update ADMIN_EMAIL and ADMIN_PASSWORD env vars on Render.
@@ -25,13 +26,13 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
         // First try database lookup
         try {
-          const { db } = await import('@/lib/db');
           const user = await db.user.findUnique({
             where: { email },
           });
 
           if (user) {
-            const passwordsMatch = await bcrypt.compare(password, user.passwordHash);
+            const passwordHash = user.password_hash ?? user.passwordHash;
+            const passwordsMatch = await bcrypt.compare(password, passwordHash);
             if (passwordsMatch) {
               return { id: user.id, email: user.email, name: user.name, role: user.role };
             }

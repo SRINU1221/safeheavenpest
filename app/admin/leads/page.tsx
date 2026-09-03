@@ -1,9 +1,11 @@
+import { db } from '@/lib/db';
+import { revalidatePath } from 'next/cache';
+
 export default async function LeadsManagement() {
   let leads: any[] = [];
   let dbAvailable = true;
 
   try {
-    const { db } = await import('@/lib/db');
     leads = await db.lead.findMany({
       orderBy: { createdAt: 'desc' },
     });
@@ -17,9 +19,7 @@ export default async function LeadsManagement() {
     const status = formData.get('status') as string;
     if (id && status) {
       try {
-        const { db } = await import('@/lib/db');
         await db.lead.update({ where: { id }, data: { status } });
-        const { revalidatePath } = await import('next/cache');
         revalidatePath('/admin/leads');
       } catch { /* DB unavailable */ }
     }
