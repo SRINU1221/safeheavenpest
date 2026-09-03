@@ -1,33 +1,53 @@
-import { db } from '@/lib/db';
-import { revalidatePath } from 'next/cache';
-
-async function updateLeadStatus(formData: FormData) {
-  'use server';
-  
-  const id = formData.get('id') as string;
-  const status = formData.get('status') as string;
-  
-  if (id && status) {
-    await db.lead.update({
-      where: { id },
-      data: { status },
-    });
-    revalidatePath('/admin/leads');
-  }
-}
-
 export default async function LeadsManagement() {
-  const leads = await db.lead.findMany({
-    orderBy: { createdAt: 'desc' },
-  });
+  let leads: any[] = [];
+  let dbAvailable = true;
+
+  try {
+    const { db } = await import('@/lib/db');
+    leads = await db.lead.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+  } catch {
+    dbAvailable = false;
+  }
+
+  async function updateLeadStatus(formData: FormData) {
+    'use server';
+    const id = formData.get('id') as string;
+    const status = formData.get('status') as string;
+    if (id && status) {
+      try {
+        const { db } = await import('@/lib/db');
+        await db.lead.update({ where: { id }, data: { status } });
+        const { revalidatePath } = await import('next/cache');
+        revalidatePath('/admin/leads');
+      } catch { /* DB unavailable */ }
+    }
+  }
 
   return (
     <div>
       <h1 className="admin-page-title">Leads Management</h1>
 
+      {!dbAvailable && (
+        <div style={{
+          background: 'rgba(232, 93, 4, 0.08)',
+          border: '1px solid rgba(232, 93, 4, 0.3)',
+          borderRadius: '8px',
+          padding: '1rem 1.25rem',
+          marginBottom: '1.5rem',
+          color: 'var(--color-accent)',
+          fontSize: '0.875rem'
+        }}>
+          ⚠️ Database is not connected. Add a PostgreSQL database in Render to store and view leads permanently.
+        </div>
+      )}
+
       <div className="admin-card">
         {leads.length === 0 ? (
-          <p style={{ color: 'var(--color-gray-500)' }}>No leads found.</p>
+          <p style={{ color: 'var(--color-gray-500)' }}>
+            {dbAvailable ? 'No leads found yet. Leads submitted via the website will appear here.' : 'No database connected. Leads cannot be displayed.'}
+          </p>
         ) : (
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
@@ -73,13 +93,7 @@ export default async function LeadsManagement() {
                         <select 
                           name="status" 
                           defaultValue={lead.status}
-                          style={{
-                            padding: '0.25rem 0.5rem',
-                            borderRadius: '4px',
-                            border: '1px solid var(--color-gray-200)',
-                            fontSize: '0.875rem',
-                            background: 'white'
-                          }}
+                          style={{ padding: '0.25rem 0.5rem', borderRadius: '4px', border: '1px solid var(--color-gray-200)', fontSize: '0.875rem', background: 'white' }}
                         >
                           <option value="NEW">New</option>
                           <option value="CONTACTED">Contacted</option>
@@ -88,14 +102,7 @@ export default async function LeadsManagement() {
                         </select>
                         <button 
                           type="submit"
-                          style={{
-                            padding: '0.25rem 0.5rem',
-                            background: 'var(--color-gray-100)',
-                            border: '1px solid var(--color-gray-200)',
-                            borderRadius: '4px',
-                            fontSize: '0.75rem',
-                            cursor: 'pointer'
-                          }}
+                          style={{ padding: '0.25rem 0.5rem', background: 'var(--color-gray-100)', border: '1px solid var(--color-gray-200)', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}
                         >
                           Update
                         </button>

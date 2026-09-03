@@ -1,18 +1,38 @@
-import { db } from '@/lib/db';
-
 export default async function AdminDashboard() {
-  // Fetch some basic stats
-  const totalLeads = await db.lead.count();
-  const newLeads = await db.lead.count({ where: { status: 'NEW' } });
-  
-  const recentLeads = await db.lead.findMany({
-    take: 5,
-    orderBy: { createdAt: 'desc' },
-  });
+  let totalLeads = 0;
+  let newLeads = 0;
+  let recentLeads: any[] = [];
+  let dbAvailable = true;
+
+  try {
+    const { db } = await import('@/lib/db');
+    totalLeads = await db.lead.count();
+    newLeads = await db.lead.count({ where: { status: 'NEW' } });
+    recentLeads = await db.lead.findMany({
+      take: 5,
+      orderBy: { createdAt: 'desc' },
+    });
+  } catch {
+    dbAvailable = false;
+  }
 
   return (
     <div>
       <h1 className="admin-page-title">Dashboard Overview</h1>
+
+      {!dbAvailable && (
+        <div style={{
+          background: 'rgba(232, 93, 4, 0.08)',
+          border: '1px solid rgba(232, 93, 4, 0.3)',
+          borderRadius: '8px',
+          padding: '1rem 1.25rem',
+          marginBottom: '1.5rem',
+          color: 'var(--color-accent)',
+          fontSize: '0.875rem'
+        }}>
+          ⚠️ Database is not connected. Leads submitted through the website are being stored temporarily. Configure a persistent database to retain data across deployments.
+        </div>
+      )}
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
         <div className="admin-card" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -30,7 +50,9 @@ export default async function AdminDashboard() {
         <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>Recent Inquiries</h2>
         
         {recentLeads.length === 0 ? (
-          <p style={{ color: 'var(--color-gray-500)' }}>No leads found yet.</p>
+          <p style={{ color: 'var(--color-gray-500)' }}>
+            {dbAvailable ? 'No leads found yet.' : 'Connect a database to view leads here.'}
+          </p>
         ) : (
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
