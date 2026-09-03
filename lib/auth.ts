@@ -75,6 +75,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET || 'fallback-dev-secret-change-in-production',
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || 'fallback-dev-secret-change-in-production',
   session: { strategy: 'jwt' },
 });
