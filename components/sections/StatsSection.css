@@ -1,0 +1,103 @@
+/* Stats Section */
+
+.stats-section {
+  background: var(--color-primary);
+  padding: var(--space-24) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.stats-section__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at top left, rgba(232, 93, 4, 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(45, 158, 107, 0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.stats-section__header {
+  text-align: center;
+  margin-bottom: var(--space-16);
+  position: relative;
+}
+
+.stats-section__title {
+  font-family: var(--font-heading);
+  font-size: clamp(var(--text-2xl), 3vw, var(--text-3xl));
+  font-weight: var(--weight-extrabold);
+  color: var(--color-white);
+  margin-bottom: var(--space-4);
+  max-width: 700px;
+  margin-inline: auto;
+  line-height: var(--leading-snug);
+}
+
+.stats-section__subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: var(--text-lg);
+}
+
+.stats__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-6);
+  position: relative;
+}
+
+.stats__card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-8) var(--space-6);
+  text-align: center;
+  transition: all var(--transition-base);
+}
+
+.stats__card:hover {
+  background: rgba(255, 255, 255, 0.14);
+  transform: translateY(-4px);
+}
+
+.stats__icon {
+  display: block;
+  font-size: 2.5rem;
+  margin-bottom: var(--space-4);
+}
+
+.stats__value {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: clamp(var(--text-3xl), 4vw, var(--text-5xl));
+  font-weight: var(--weight-black);
+  color: var(--color-white);
+  line-height: 1;
+  margin-bottom: var(--space-3);
+  letter-spacing: -0.02em;
+}
+
+.stats__label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 1024px) {
+  .stats__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .stats__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+
+  .stats__card {
+    padding: var(--space-6) var(--space-4);
+  }
+}

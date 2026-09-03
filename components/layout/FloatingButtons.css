@@ -1,0 +1,120 @@
+/* Floating Buttons */
+
+.floating-btn {
+  position: fixed;
+  right: var(--space-6);
+  z-index: var(--z-floating);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.875rem 1.25rem;
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-white);
+  text-decoration: none;
+  box-shadow: var(--shadow-xl);
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.floating-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+}
+
+.floating-btn:active {
+  transform: translateY(-1px);
+}
+
+.floating-btn--whatsapp {
+  bottom: 110px;
+  background: #25d366;
+}
+
+.floating-btn--whatsapp:hover {
+  background: #1da851;
+  box-shadow: 0 12px 30px rgba(37, 211, 102, 0.45);
+}
+
+.floating-btn--call {
+  bottom: 190px;
+  background: var(--color-primary);
+}
+
+.floating-btn--call:hover {
+  background: var(--color-primary-dark);
+  box-shadow: 0 12px 30px rgba(26, 58, 92, 0.4);
+}
+
+.floating-btn__label {
+  white-space: nowrap;
+}
+
+/* =========================================
+   Mobile Bottom Action Bar
+   ========================================= */
+.mobile-action-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-floating);
+  background: var(--color-white);
+  border-top: 1px solid var(--color-gray-200);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+  padding: env(safe-area-inset-bottom, 0);
+}
+
+.mobile-action-bar__btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0.625rem var(--space-2);
+  font-size: 0.7rem;
+  font-weight: var(--weight-semibold);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mobile-action-bar__btn--call {
+  color: var(--color-primary);
+  border-right: 1px solid var(--color-gray-200);
+}
+
+.mobile-action-bar__btn--whatsapp {
+  color: #25d366;
+  border-right: 1px solid var(--color-gray-200);
+}
+
+.mobile-action-bar__btn--quote {
+  color: var(--color-accent);
+  background: var(--color-accent-ultra-light);
+}
+
+.mobile-action-bar__btn:hover {
+  opacity: 0.85;
+}
+
+/* Show mobile bar and hide floating on mobile */
+@media (max-width: 768px) {
+  .floating-btn {
+    display: none;
+  }
+
+  .mobile-action-bar {
+    display: flex;
+  }
+
+  /* Add bottom padding to body to account for action bar */
+  body {
+    padding-bottom: 60px;
+  }
+}

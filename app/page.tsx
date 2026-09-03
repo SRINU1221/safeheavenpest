@@ -1,69 +1,49 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import type { Metadata } from 'next';
+import { siteConfig } from '@/config/site';
+import HeroSection from '@/components/sections/HeroSection';
+import TrustBar from '@/components/sections/TrustBar';
+import ServicesSection from '@/components/sections/ServicesSection';
+import AboutSplit from '@/components/sections/AboutSplit';
+import WhyChooseUs from '@/components/sections/WhyChooseUs';
+import HowItWorks from '@/components/sections/HowItWorks';
+import StatsSection from '@/components/sections/StatsSection';
+import TestimonialsSection from '@/components/sections/TestimonialsSection';
+import ServiceAreasPreview from '@/components/sections/ServiceAreasPreview';
+import BlogPreview from '@/components/sections/BlogPreview';
+import FAQSection from '@/components/sections/FAQSection';
+import CTABanner from '@/components/sections/CTABanner';
+import { generateLocalBusinessSchema } from '@/lib/seo';
 
-export default function Home() {
+export const metadata: Metadata = {
+  title: `Professional Pest Control Services | ${siteConfig.name}`,
+  description:
+    'Professional pest-control solutions for homes and businesses in Hyderabad. Request a free inspection and get a customized solution for your pest problem.',
+  alternates: {
+    canonical: siteConfig.url,
+  },
+};
+
+export default function HomePage() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.tsx</code> file.
-          </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateLocalBusinessSchema()),
+        }}
+      />
+      <HeroSection />
+      <TrustBar />
+      <ServicesSection />
+      <AboutSplit />
+      <WhyChooseUs />
+      <HowItWorks />
+      <StatsSection />
+      <TestimonialsSection />
+      <ServiceAreasPreview />
+      <BlogPreview />
+      <FAQSection />
+      <CTABanner />
+    </>
   );
 }
