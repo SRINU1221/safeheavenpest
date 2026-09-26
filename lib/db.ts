@@ -71,6 +71,45 @@ export const db = {
       );
       return result.rows[0];
     },
+    findUnique: async (args: { where: { id: string } }) => {
+      const result = await getPool().query(
+        'SELECT * FROM leads WHERE id = $1',
+        [args.where.id]
+      );
+      return result.rows[0] ? rowToLead(result.rows[0]) : null;
+    },
+  },
+
+  // ----------- ADMIN REPLIES -----------
+  adminReply: {
+    create: async (data: { leadId: string; message: string; sentBy?: string }) => {
+      const result = await getPool().query(
+        `INSERT INTO admin_replies (lead_id, message, sent_by)
+         VALUES ($1, $2, $3) RETURNING *`,
+        [data.leadId, data.message, data.sentBy ?? 'admin']
+      );
+      return result.rows[0];
+    },
+    findByLeadId: async (leadId: string) => {
+      const result = await getPool().query(
+        `SELECT * FROM admin_replies WHERE lead_id = $1 ORDER BY created_at ASC`,
+        [leadId]
+      );
+      return result.rows.map((row: any) => ({
+        id: row.id,
+        leadId: row.lead_id,
+        message: row.message,
+        sentBy: row.sent_by,
+        createdAt: row.created_at,
+      }));
+    },
+    countByLeadId: async (leadId: string) => {
+      const result = await getPool().query(
+        `SELECT COUNT(*) FROM admin_replies WHERE lead_id = $1`,
+        [leadId]
+      );
+      return parseInt(result.rows[0].count, 10);
+    },
   },
 
   // ----------- USERS -----------

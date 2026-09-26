@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
 import Link from 'next/link';
+import { headers } from 'next/headers';
 import './AdminLayout.css';
 
 export default async function AdminLayout({
@@ -14,6 +15,10 @@ export default async function AdminLayout({
     redirect('/login');
   }
 
+  // Determine active path for sidebar highlighting
+  const headersList = await headers();
+  const pathname = headersList.get('x-pathname') || '';
+
   return (
     <div className="admin-layout">
       {/* Admin Sidebar */}
@@ -22,17 +27,16 @@ export default async function AdminLayout({
           <Link href="/" className="admin-logo">
             SafeHaven<span>Pest</span>
           </Link>
-          <span className="admin-badge">Admin</span>
+          <span className="admin-badge">Admin Panel</span>
         </div>
 
         <nav className="admin-nav">
           <Link href="/admin" className="admin-nav__link">
-            Dashboard
+            🏠 Dashboard
           </Link>
           <Link href="/admin/leads" className="admin-nav__link">
-            Leads Management
+            📋 Inquiries
           </Link>
-          {/* Add more admin links here in the future */}
         </nav>
 
         <div className="admin-sidebar__footer">
