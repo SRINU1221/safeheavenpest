@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { siteConfig } from '@/config/site';
@@ -14,18 +14,12 @@ const ShieldIcon = () => (
   </svg>
 );
 
-const ChevronDown = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M3 5L7 9L11 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
+
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const pathname = usePathname();
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -35,18 +29,7 @@ export default function Header() {
 
   useEffect(() => {
     setMobileOpen(false);
-    setActiveDropdown(null);
   }, [pathname]);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setActiveDropdown(null);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   useEffect(() => {
     if (mobileOpen) {
@@ -74,47 +57,15 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="header__nav" aria-label="Main navigation" ref={dropdownRef}>
+          <nav className="header__nav" aria-label="Main navigation">
             {siteConfig.nav.map((item) => (
               <div key={item.label} className="header__nav-item">
-                {item.children ? (
-                  <>
-                    <button
-                      className={`header__nav-link header__nav-link--dropdown ${pathname.startsWith('/services') ? 'active' : ''}`}
-                      onClick={() => setActiveDropdown(activeDropdown === item.label ? null : item.label)}
-                      aria-expanded={activeDropdown === item.label}
-                      aria-haspopup="true"
-                      suppressHydrationWarning
-                    >
-                      {item.label}
-                      <span className={`header__nav-chevron ${activeDropdown === item.label ? 'open' : ''}`}>
-                        <ChevronDown />
-                      </span>
-                    </button>
-                    {activeDropdown === item.label && (
-                      <div className="header__dropdown" role="menu">
-                        {item.children.map((child) => (
-                          <Link
-                            key={child.href}
-                            href={child.href}
-                            className={`header__dropdown-item ${pathname === child.href ? 'active' : ''}`}
-                            role="menuitem"
-                            onClick={() => setActiveDropdown(null)}
-                          >
-                            {child.label}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <Link
-                    href={item.href}
-                    className={`header__nav-link ${pathname === item.href ? 'active' : ''}`}
-                  >
-                    {item.label}
-                  </Link>
-                )}
+                <Link
+                  href={item.href}
+                  className={`header__nav-link ${pathname === item.href ? 'active' : ''}`}
+                >
+                  {item.label}
+                </Link>
               </div>
             ))}
           </nav>
@@ -180,42 +131,13 @@ export default function Header() {
           <nav className="mobile-nav__links" aria-label="Mobile navigation">
             {siteConfig.nav.map((item) => (
               <div key={item.label} className="mobile-nav__item">
-                {item.children ? (
-                  <>
-                    <button
-                      className="mobile-nav__link mobile-nav__link--parent"
-                      onClick={() => setActiveDropdown(activeDropdown === item.label ? null : item.label)}
-                      suppressHydrationWarning
-                    >
-                      {item.label}
-                      <span className={`header__nav-chevron ${activeDropdown === item.label ? 'open' : ''}`}>
-                        <ChevronDown />
-                      </span>
-                    </button>
-                    {activeDropdown === item.label && (
-                      <div className="mobile-nav__sub">
-                        {item.children.map((child) => (
-                          <Link
-                            key={child.href}
-                            href={child.href}
-                            className="mobile-nav__sub-link"
-                            onClick={() => setMobileOpen(false)}
-                          >
-                            {child.label}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <Link
-                    href={item.href}
-                    className={`mobile-nav__link ${pathname === item.href ? 'active' : ''}`}
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                )}
+                <Link
+                  href={item.href}
+                  className={`mobile-nav__link ${pathname === item.href ? 'active' : ''}`}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {item.label}
+                </Link>
               </div>
             ))}
           </nav>

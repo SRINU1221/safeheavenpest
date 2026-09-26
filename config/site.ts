@@ -62,19 +62,6 @@ export const siteConfig = {
   nav: [
     { label: "Home", href: "/" },
     { label: "About", href: "/about" },
-    {
-      label: "Services",
-      href: "/services",
-      children: [
-        { label: "Termite Control", href: "/services/termite-control" },
-        { label: "Cockroach Control", href: "/services/cockroach-control" },
-        { label: "Bed Bug Control", href: "/services/bed-bug-control" },
-        { label: "Mosquito Control", href: "/services/mosquito-control" },
-        { label: "Rodent Control", href: "/services/rodent-control" },
-        { label: "Ant Control", href: "/services/ant-control" },
-        { label: "Commercial Pest Control", href: "/services/commercial-pest-control" },
-      ],
-    },
     { label: "Why Us", href: "/why-us" },
     { label: "Process", href: "/process" },
     { label: "Areas", href: "/service-areas" },
